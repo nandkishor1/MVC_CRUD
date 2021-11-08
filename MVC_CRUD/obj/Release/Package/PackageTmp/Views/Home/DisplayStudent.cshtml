@@ -1,0 +1,100 @@
+﻿@model IEnumerable <BO.Student>
+
+@{
+    ViewBag.Title = "DisplayStudent";
+}
+
+<h2>Display Student</h2>
+
+<table class="table">
+    <tr>
+        <th>
+           @Html.DisplayName("Name")
+        </th>
+        
+        <th>
+            @Html.DisplayNameFor(dep=>dep.DepName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(dob=>dob.DOB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(Ph=>Ph.Phone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(email=>email.Email)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(gender=>gender.Gender)
+        </th>*@
+        @*<th>
+            @Html.DisplayNameFor(adrs=>adrs.Address)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(city=>city.CityName),@Html.DisplayNameFor(state=>state.StateName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(uni=>uni.UniversityName)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(hobie=>hobie.Hobbies)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(pic=>pic.ProfilePicName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(resume=>resume.ResumeName)
+        </th>
+    </tr>
+    @foreach(BO.Student obj in Model)
+            {
+     <tr>
+         <td>
+             @Html.DisplayFor(fn => obj.FName)&nbsp; @Html.DisplayFor(ln => obj.LName)
+         </td>
+    
+         <td>
+             @Html.DisplayFor(dep=>obj.DepName)
+         </td>
+         <td>
+             @*//@Html.DisplayFor(dob=>obj.DOB)*@
+             @obj.DOB.ToString("dd'/'MM'/'yyyy")
+         </td>
+    <td>
+        @Html.DisplayFor(Ph => obj.Phone)
+    </td>
+         <td>
+             @Html.DisplayFor(email=>obj.Email)
+         </td>
+         @*<td>
+             @Html.DisplayFor(gender=>obj.Gender)
+         </td>*@
+         @*<td>
+             @Html.DisplayFor(adrs=>obj.Address)
+         </td>*@
+         <td>
+             @Html.DisplayFor(city=>obj.CityName),@Html.DisplayFor(state=>obj.StateName)
+         </td>
+         <td>
+             @Html.DisplayFor(uni=>obj.UniversityName)
+         </td>
+         @*<td>
+             @Html.DisplayFor(hoby=>obj.Hobbies)
+         </td>*@
+         <td>
+             <img src="https://bsite.net/NANDKISHOR/ProfilePics/@obj.ProfilePicName" width="50" height="50"/>
+         </td>
+         <td>
+             <a name="Download" href="https://bsite.net/NANDKISHOR/StudentResume/@obj.ResumeName">Download</a>
+         </td>
+         <td>
+             @Html.ActionLink("Edit","Edit",new { id=obj.StudentID})
+         </td>
+
+         <td>
+             @Html.ActionLink("Delete","Delete",new { id=obj.StudentID} ,new { onclick="return confirm('Are you sure to delete this record ?');"})
+         </td>
+    </tr>
+   }
+
+</table>

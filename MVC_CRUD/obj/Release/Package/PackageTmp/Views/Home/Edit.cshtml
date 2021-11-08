@@ -1,0 +1,224 @@
+﻿@model BO.Student
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit View</h2>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+
+
+        $("#ddlState").change(function () {
+            debugger;
+            var state_ID = parseInt($(this).val());
+            // var City_ID = @Model.CityID;
+            if (!isNaN(state_ID)) {
+
+                var ddlCity = $("#ddlCity");
+                ddlCity.append($("<option></option>").val('').html('please wait...'))
+
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '@Url.Action("GetCities", "Home")',
+                    data: { StateID: state_ID },
+                    success: function (data) {
+                        debugger;
+
+                        ddlCity.empty();
+                        ddlCity.append($("<option></option>").val('').html('--Select City--'));
+
+                        $.each(data, function (i, city) {
+                            ddlCity.append($("<option></option>").val(city.CityID).html(city.CityName));
+                        });
+                        debugger;
+                        $("#ddlCity").val(@Model.CityID)
+                    },
+                    error: function () {
+                        alert("Error while receiveing data");
+
+                    }
+
+                });
+            }
+        });
+
+        $("#ddlState").change();
+        //$('#ddlState').trigger('change');
+        $("#txtFile").change(function (){
+            $("#imgPic").hide();
+        });
+
+        $("#ddlState").change();
+        //$('#ddlState').trigger('change');
+        $("#txtResume").change(function () {
+            $("#lnkFile").hide();
+        });
+    });
+
+
+
+
+</script>
+
+
+@*<div>
+
+        <br />
+        State : @Html.DropDownList("State:", (List<SelectListItem>)ViewBag.State,new { id="ddlState" })
+    </div>
+    <br />
+    <br />
+    <div>
+        City : <select id="ddlCity"></select>
+
+    </div>*@
+
+
+@using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+        <h2>Student Form</h2>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.UniversityName, "University Name ", new { @class = "control-label col-md-2", @id = "lblUniversityName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.UniversityName, new { @class = "form-control", @id = "txtUniversityName" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.DepartmentID, "Department ", new { @class = "control-label col-md-2", @id = "lblDepartment" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(ddl => ddl.DepartmentID, Model.lstDepartment, "--Select Department--", new { @class = "form-control", @id = "txtDepartment" })
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.FName, "First Name ", new { @class = "control-label col-md-2", @id = "lblFName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.FName, new { @class = "form-control", @id = "txtFName" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.LName, "Last Name ", new { @class = "control-label col-md-2", @id = "lblLName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.LName, new { @class = "form-control", @id = "txtLName" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Gender, "Gender ", new { @class = "control-label col-md-2", @id = "lblGender" })
+            <div class="col-md-10">
+                @Html.RadioButtonFor(rd => rd.Gender, "Male")
+                @Html.Label("Male")
+                @Html.RadioButtonFor(rd => rd.Gender, "Female")
+                @Html.Label("Female")
+                @Html.RadioButtonFor(rd => rd.Gender, "Other")
+                @Html.Label("Other")
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.DOB, "DOB", new { @class = "control-label col-md-2", @id = "lblDOB" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.DOB, "{0:yyyy-MM-dd}", new { @class = "form-control", @id = "txtDOB", @type = "Date" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Email, "Email ", new { @class = "control-label col-md-2", @id = "lblEmail" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Email, new { @class = "form-control", @id = "txtEmail", @type = "email" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Phone, "Phone ", new { @class = "control-label col-md-2", @id = "lblPhone" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Phone, new { @class = "form-control", @id = "txtPhone", @maxlength = "10" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.StateID, "State ", new { @class = "control-label col-md-2", @id = "lblState" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(ddlState => ddlState.StateID, Model.lstState, "--Select State--", new { @class = "form-control", @id = "ddlState" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.CityID, "City ", new { @class = "control-label col-md-2", @id = "lblCity" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(ddlCity => ddlCity.CityID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @id = "ddlCity" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Address, "Address ", new { @class = "control-label col-md-2", @id = "lblAddress" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(ar => ar.Address, new { @class = "form-control", @id = "txtarAddress" })
+
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Hobbies, "Hoby ", new { @class = "control-label col-md-2", @id = "lblHoby" })
+            <div class="col-md-10">
+                @for (int i = 0; i < Model.Hoby.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(chkHoby => chkHoby.Hoby[i].Selected)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(lbl => lbl.Hoby[i].Text)
+                            @Html.HiddenFor(hd => hd.Hoby[i].Value)
+                            @Html.HiddenFor(hd => hd.Hoby[i].Text)
+                        </td>
+                    </tr>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.ProfilePicPath, "Profile Picture ", new { @class = "control-label col-md-2", @id = "lblPic" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Image_File, new { @class = "form-control", @id = "txtFile", @type = "file" })
+                <img id="imgPic" src="https://bsite.net/NANDKISHOR/ProfilePics/@Model.ProfilePicPath" width="50" height="50" />
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.ResumePath, "Resume ", new { @class = "control-label col-md-2", @id = "lblResume" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Resume_File, new { @class = "form-control", @id = "txtResume", @type = "file" })
+                <a name="Download" id="lnkFile" href="https://bsite.net/NANDKISHOR/StudentResume/@Model.ResumePath">@Model.ResumePath.Split('_')[0]@Path.GetExtension(Model.ResumePath)</a>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-primary" value="Update" name="Create" />
+           
+        </div>
+    </div>
+}
+

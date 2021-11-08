@@ -1,0 +1,264 @@
+﻿@model BO.Student
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        debugger;
+        $(document).on('Keypress', '#txtUniversityName', function (event) {
+            debugger;
+            var regex = new RegExp("^[a-zA-Z ]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $(document).on('Keypress', '#txtFName', function (event) {
+            debugger;
+            var regex = new RegExp("^[a-zA-Z ]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $(document).on('Keypress', '#txtLName', function (event) {
+            debugger;
+            var regex = new RegExp("^[a-zA-Z ]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $('#txtPhone').keypress(function (e) {
+            var charCode = (e.which) ? e.which : event.keyCode
+            if (String.fromCharCode(charCode).match(/[^0-9]/g))
+                return false;
+        });
+
+        $("#ddlState").change(function () {
+            debugger;
+            var state_ID = parseInt($(this).val());
+
+            if (!isNaN(state_ID)) {
+
+                var ddlCity = $("#ddlCity");
+                ddlCity.append($("<option></option>").val('').html('please wait...'))
+
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url:'@Url.Action("GetCities", "Home")',
+                    data: { StateID: state_ID },
+                    success: function (data) {
+                        debugger;
+
+                        ddlCity.empty();
+                        ddlCity.append($("<option></option>").val('').html('--Select City--'));
+
+                        $.each(data, function (i, city) {
+                            ddlCity.append($("<option></option>").val(city.CityID).html(city.CityName));
+                        });
+
+                    },
+                    error: function () {
+                        alert("Error while receiveing data");
+
+                    }
+
+                });
+            }
+        });
+    });
+
+
+
+
+</script>
+
+@{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<style type="text/css">
+    .required-field {
+        content: "*";
+        color: red;
+    }
+</style>
+
+@*<div>
+
+        <br />
+        State : @Html.DropDownList("State:", (List<SelectListItem>)ViewBag.State,new { id="ddlState" })
+    </div>
+    <br />
+    <br />
+    <div>
+        City : <select id="ddlCity"></select>
+
+    </div>*@
+
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+        <h2>Student Form</h2>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.UniversityName, "University Name ", new { @class = "control-label col-md-2", @id = "lblUniversityName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.UniversityName, new { @class = "form-control", @id = "txtUniversityName", @maxlength = "100" })
+                @Html.ValidationMessageFor(txt => txt.UniversityName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.DepartmentID, "Department ", new { @class = "control-label col-md-2", @id = "lblDepartment" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(ddl => ddl.DepartmentID, Model.lstDepartment, "--Select Department--", new { @class = "form-control", @id = "txtDepartment" })
+                @Html.ValidationMessageFor(txt => txt.DepartmentID, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.FName, "First Name ", new { @class = "control-label col-md-2", @id = "lblFName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.FName, new { @class = "form-control", @id = "txtFName", @maxlength = "100" })
+                @Html.ValidationMessageFor(txt => txt.FName, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.LName, "Last Name ", new { @class = "control-label col-md-2", @id = "lblLName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.LName, new { @class = "form-control", @id = "txtLName", @maxlength = "100" })
+                @Html.ValidationMessageFor(txt => txt.LName, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Gender, "Gender ", new { @class = "control-label col-md-2", @id = "lblGender" })
+            <div class="col-md-10">
+                @Html.RadioButtonFor(rd => rd.Gender, "Male")
+                @Html.Label("Male")
+                @Html.RadioButtonFor(rd => rd.Gender, "Female")
+                @Html.Label("Female")
+                @Html.RadioButtonFor(rd => rd.Gender, "Other")
+                @Html.Label("Other")
+                @Html.ValidationMessageFor(txt => txt.Gender, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.DOB, "DOB", new { @class = "control-label col-md-2", @id = "lblDOB" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.DOB, new { @class = "form-control", @id = "txtDOB", @type = "Date" })
+                @Html.ValidationMessageFor(txt => txt.DOB, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Email, "Email ", new { @class = "control-label col-md-2", @id = "lblEmail" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Email, new { @class = "form-control", @id = "txtEmail", @type = "email", @maxlength = "100" })
+                @Html.ValidationMessageFor(txt => txt.Email, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Phone, "Phone ", new { @class = "control-label col-md-2", @id = "lblPhone" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Phone, new { @class = "form-control", @id = "txtPhone", @maxlength = "10" })
+                @Html.ValidationMessageFor(txt => txt.Phone, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.StateID, "State ", new { @class = "control-label col-md-2", @id = "lblState" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(ddlState => ddlState.StateID, Model.lstState, "--Select State--", new { @class = "form-control", @id = "ddlState" })
+                @Html.ValidationMessageFor(txt => txt.StateID, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.CityID, "City ", new { @class = "control-label col-md-2", @id = "lblCity" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(ddlCity => ddlCity.CityID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @id = "ddlCity" })
+                @Html.ValidationMessageFor(txt => txt.CityID, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Address, "Address ", new { @class = "control-label col-md-2", @id = "lblAddress" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(ar => ar.Address, new { @class = "form-control", @id = "txtarAddress", @maxlength = "1000" })
+                @Html.ValidationMessageFor(txt => txt.Address, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Hobbies, "Hoby ", new { @class = "control-label col-md-2", @id = "lblHoby" })
+            <div class="col-md-10">
+                @for (int i = 0; i < Model.Hoby.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(chkHoby => chkHoby.Hoby[i].Selected)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(lbl => lbl.Hoby[i].Text)
+                            @Html.HiddenFor(hd => hd.Hoby[i].Value)
+                            @Html.HiddenFor(hd => hd.Hoby[i].Text)
+                        </td>
+                    </tr>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.ProfilePicPath, "Profile Picture ", new { @class = "control-label col-md-2", @id = "lblPic" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Image_File, new { @class = "form-control", @id = "txtFile", @type = "file" })
+                @Html.ValidationMessageFor(txt => txt.Image_File, "", new { @class = "text-danger" })
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.ResumePath, "Resume ", new { @class = "control-label col-md-2", @id = "lblResume" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Resume_File, new { @class = "form-control", @id = "txtFile", @type = "file" })
+                @Html.ValidationMessageFor(txt => txt.Resume_File, "", new { @class = "text-danger" })
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-primary" name="Create" />
+            <input type="reset" class="btn btn-primary" name="Reset" />
+        </div>
+    </div>
+}
